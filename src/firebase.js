@@ -13,7 +13,6 @@ let firebaseConfig = {
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-firebase.analytics();
 
 export function loginWithGoogle() {
   let provider = new firebase.auth.GoogleAuthProvider()

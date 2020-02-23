@@ -19,7 +19,8 @@ export default function reducer(state = initialData, action) {
       return {
         ...state,
         fetching: false,
-        ...action.payload
+        ...action.payload,
+        loggedIn: true
       }
     case LOGIN_ERROR:
       return {
@@ -48,7 +49,12 @@ export let doGoogleLoginAction = () => (dispatch, getState) => {
       saveStorage()
       dispatch({
         type: LOGIN_SUCCES,
-        payload: {...user}
+        payload: {
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL
+        }
       })
       saveStorage(getState())
     })
