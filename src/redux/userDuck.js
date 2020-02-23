@@ -1,4 +1,4 @@
-import { loginWithGoogle } from '../firebase'
+import { loginWithGoogle, signOutGoogle } from '../firebase'
 
 // constants
 let initialData = {
@@ -6,8 +6,9 @@ let initialData = {
   fetching: false
 }
 let LOGIN = 'LOGIN'
-let LOGIN_SUCCES = 'LOGIN_SUCCES'
+let LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 let LOGIN_ERROR = 'LOGIN_ERROR'
+let LOGOUT = 'LOGOUT'
 // reducer
 export default function reducer(state = initialData, action) {
   switch(action.type) {
@@ -15,7 +16,11 @@ export default function reducer(state = initialData, action) {
       return {
         ...state, fetching: true
       }
-    case LOGIN_SUCCES:
+    case LOGOUT:
+      return {
+        ...initialData
+      }
+    case LOGIN_SUCCESS:
       return {
         ...state,
         fetching: false,
@@ -39,6 +44,24 @@ localStorage.storage = JSON.stringify(storage)
 }
 
 // action (action creator)
+export let logOutAction = () => (dispatch, getState) => {
+  signOutGoogle()
+  dispatch({
+    type: LOGOUT
+  })
+  localStorage.removeItem('storage')
+}
+
+export let restoreSessionAction = () => dispatch => {
+  let storage = localStorage.getItem('storage')
+  storage = JSON.parse(storage)
+  if (storage && storage.user) {
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: storage.user
+    })
+  }
+}
 
 export let doGoogleLoginAction = () => (dispatch, getState) => {
   dispatch({
@@ -48,7 +71,7 @@ export let doGoogleLoginAction = () => (dispatch, getState) => {
     .then(user => {
       saveStorage()
       dispatch({
-        type: LOGIN_SUCCES,
+        type: LOGIN_SUCCESS,
         payload: {
           uid: user.uid,
           displayName: user.displayName,

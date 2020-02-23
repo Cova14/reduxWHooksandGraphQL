@@ -1,6 +1,6 @@
 import {createStore, combineReducers, compose, applyMiddleware} from 'redux'
-import userReducer from './userDuck'
-import charsReducer, {getCharactersAction} from './charsDucks'
+import userReducer, { restoreSessionAction } from './userDuck'
+import charsReducer, { getCharactersAction } from './charsDucks'
 import thunk from 'redux-thunk'
 
 let rootReducer = combineReducers({
@@ -17,5 +17,6 @@ export default function generateStore() {
   )
   // consiguiendo los personajes por primera vez
   getCharactersAction()(store.dispatch, store.getState)
+  restoreSessionAction()(store.dispatch)
   return store
 }

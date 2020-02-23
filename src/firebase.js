@@ -19,3 +19,7 @@ export function loginWithGoogle() {
   return firebase.auth().signInWithPopup(provider)
     .then(snap => snap.user)
 }
+
+export function signOutGoogle() {
+  firebase.auth().signOut()
+}
